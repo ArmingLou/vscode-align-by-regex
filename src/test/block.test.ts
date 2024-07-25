@@ -15,7 +15,7 @@ bb.bb
 ccc.
 .ddd
 e..e`;
-        let input = '\\.';
+        let input = ['\\.'];
         let startLine = 0;
         let block : Block = new Block(text, input, startLine, vscode.EndOfLine.LF);
 
@@ -78,7 +78,7 @@ e..e`;
     test("Test trim", function() {
         let text = `a   . a   .a
     bb.bb    `;
-        let input = '\\.';
+        let input = ['\\.'];
         let startLine = 0;
         let block : Block = new Block(text, input, startLine, vscode.EndOfLine.LF).trim();
 
@@ -102,7 +102,7 @@ e..e`;
     test("Test align", function() {
         let text = `a   . a   .a
     bb.bb    `;
-        let input = '\\.';
+        let input = ['\\.'];
         let startLine = 0;
         let block : Block = new Block(text, input, startLine, vscode.EndOfLine.LF).trim().align();
 
@@ -129,7 +129,7 @@ e..e`;
 Only got twenty dollars in my pocket
 I'm, I'm, I'm hunting, looking for a come up
 This is fucking awesome.`;
-        let input = '\'';
+        let input = ['\''];
         let startLine = 0;
 
         /* regex partioning appears to work normally */
@@ -169,7 +169,7 @@ This is fucking awesome.`;
 b   b(bbbb)
 c  c(c)
 d d(ddddddd)`;
-        let input = '\\)';
+        let input = ['\\)'];
         let startLine = 0;
 
         let blockUnaligned : Block = new Block(text, input, startLine, vscode.EndOfLine.LF);
@@ -205,7 +205,7 @@ d d(ddddddd)`;
         let text = `function blah() { "hi there" }
 # This function does amazing things the likes of which you have never seen.
 function longerfunc() { "hi there" }`;
-        let input = '\{';
+        let input = ['\{'];
         let startLine = 0;
 
         let blockUnaligned : Block = new Block(text, input, startLine, vscode.EndOfLine.LF);
@@ -247,7 +247,7 @@ function longerfunc() { "hi there" }`;
         
         let text = `a.
 \tb.`;
-        let input = '\\.';
+        let input = ['\\.'];
         let startLine = 0;
 
         let blockUnaligned : Block = new Block(text, input, startLine, vscode.EndOfLine.LF);
@@ -265,7 +265,7 @@ function longerfunc() { "hi there" }`;
     test("Markdown table", function() {
         let text = `I|have|a|table
 It|is|not|aligned`;
-        let input = '\\|';
+        let input = ['\\|'];
         let startLine = 0;
 
         let blockUnaligned : Block = new Block(text, input, startLine, vscode.EndOfLine.LF);
@@ -283,7 +283,7 @@ It|is|not|aligned`;
     test("Bad Regex", function() {
         let text = `I|have|a|table
 It|is|not|aligned`;
-        let input = '|'; /* This should normally be escaped */
+        let input = ['|']; /* This should normally be escaped */
         let startLine = 0;
 
         let blockUnaligned : Block = new Block(text, input, startLine, vscode.EndOfLine.LF);
@@ -303,7 +303,7 @@ It|is|not|aligned`;
         let text = `a(123) // 123
 bb(45)  // 45
 ccc(6)   // 6`;
-        let input = '\\('; 
+        let input = ['\\(']; 
         let startLine = 0;
 
         let blockUnaligned : Block = new Block(text, input, startLine, vscode.EndOfLine.LF);

@@ -2,9 +2,9 @@
     "name": "align-by-regex",
     "displayName": "Align by RegEx",
     "description": "Aligns selected lines of text by a regular expression.",
-    "version": "1.0.4",
+    "version": "2.1.0",
     "icon": "images/icon.png",
-    "publisher": "janjoerke",
+    "publisher": "Arming",
     "license": "LICENSE.txt",
     "repository": {
         "type": "git",
@@ -25,6 +25,10 @@
             {
                 "command": "align.by.regex",
                 "title": "Align by RegEx"
+            },
+            {
+                "command": "align.by.regex.sql",
+                "title": "Align SQL DDL"
             }
         ],
         "keybindings": [
@@ -32,6 +36,10 @@
                 "command": "align.by.regex",
                 "key": "alt+shift+a",
                 "when": "editorHasSelection"
+            },
+            {
+                "command": "align.by.regex.sql",
+                "key": "ctrl+shift+f"
             }
         ],
         "configuration": {
@@ -40,7 +48,31 @@
             "properties": {
                 "align.by.regex.templates": {
                     "type": "object",
-                    "description": "Stored RegEx templates."
+                    "description": "Stored RegEx templates.",
+                    "default": {
+                        "sql": {
+                            "alignRegExp": [
+                                "^(\\s*)(`\\w+`)(\\s)\\s*",
+                                "$+^(?:((?:(?!NOT)(?!NULL)(?!DEFAULT)[^\\s])+)(\\s|$)\\s*)?",
+                                "\\s*(NOT\\s)?\\s*(NULL)?(\\s)?\\s*(.*)"
+                            ],
+                            "startRegExp": "^\\s*CREATE\\s+TABLE\\s+.*",
+                            "endRegExp": "^.*\\)\\s?ENGINE\\s*="
+                        },
+                        "eq": {
+                            "alignRegExp": [
+                                "^(\\s*)([^=\\s]+)",
+                                "+^(?:(\\s)?\\s*([^=\\s]+))?",
+                                "^(\\s)?\\s*(=)(\\s)?\\s*(.*)"
+                            ]
+                        },
+                        "sp": {
+                            "alignRegExp": [
+                                "(^\\s*)([^\\s]+)",
+                                "+(?:(\\s)\\s*([^\\s]+))?"
+                            ]
+                        }
+                    }
                 }
             }
         }
