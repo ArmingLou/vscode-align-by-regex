@@ -25,7 +25,7 @@ export class Block {
             for (let input of inputs) {
                 // 分段匹配，每个正则都必须有匹配结果，可以空串。任意一个正则不匹配，则本行都不处理。
                 let regParts = [] as Part[];
-                
+
                 let zip = false;
                 if (input.startsWith('$')) {
                     zip = true;
@@ -36,6 +36,14 @@ export class Block {
                 if (input.startsWith('+')) {
                     loop = true;
                     input = input.substring(1);//去掉开头的特殊标记“+” 表示贪婪模式循环匹配
+                }
+
+                let zipPer = false;
+                if (!zip && loop) {
+                    if (input.startsWith('$')) {
+                        zipPer = true;
+                        input = input.substring(1);//去掉开头的的特殊标记“$” 表示每次循环将匹配到的内容合并成一个
+                    }
                 }
 
 
@@ -71,13 +79,20 @@ export class Block {
                         regParts.push({ type: PartType.Regex, value: st0 });
                     } else {
                         // 有分组，匹配每一个分组
+                        let zipVal = '';
                         for (let j = 1; j < result.length; j++) {
                             let st = result[j];
                             if (st === undefined) {
                                 st = '';
                             }
-                            // lineObject.parts.push({ type: PartType.Regex, value: st });
-                            regParts.push({ type: PartType.Regex, value: st });
+                            if (zipPer) {
+                                zipVal += st;
+                            } else {
+                                regParts.push({ type: PartType.Regex, value: st });
+                            }
+                        }
+                        if (zipPer) {
+                            regParts.push({ type: PartType.Regex, value: zipVal });
                         }
                     }
 
@@ -104,12 +119,12 @@ export class Block {
                     break;
                 }
 
-                if(zip){
+                if (zip) {
                     let v = '';
-                    for(let k = 0; k < regParts.length; k++){
+                    for (let k = 0; k < regParts.length; k++) {
                         v += regParts[k].value;
                     }
-                    regParts = [{type: PartType.Regex, value: v}];
+                    regParts = [{ type: PartType.Regex, value: v }];
                 }
 
                 lineObject.reg.push(regParts);
@@ -131,7 +146,7 @@ export class Block {
             for (let j = 0; j < line.reg.length; j++) {
                 let reg = line.reg[j];
                 let count = maxCount.get(j) || 0;
-                if(count < reg.length){
+                if (count < reg.length) {
                     maxCount.set(j, reg.length);
                 }
             }
@@ -142,12 +157,12 @@ export class Block {
                 let reg = line.reg[j];
                 let count = maxCount.get(j) || 0;
                 let diff = count - reg.length;
-                if(diff > 0){
-                    for(let k = 0; k < diff; k++){
+                if (diff > 0) {
+                    for (let k = 0; k < diff; k++) {
                         reg.push({ type: PartType.Regex, value: '' });
                     }
                 }
-                this.lines[i].parts.push(...reg); 
+                this.lines[i].parts.push(...reg);
             }
         }
     }
